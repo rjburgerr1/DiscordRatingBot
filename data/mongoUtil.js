@@ -9,7 +9,7 @@ class MongoBot {
   constructor() {
     const url = config.host;
 
-    this.client = new MongoClient(url);
+    this.client = new MongoClient(url, { useUnifiedTopology: true });
   }
   async init() {
     await this.client.connect();
