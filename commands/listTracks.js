@@ -12,7 +12,8 @@ module.exports = {
 
 const toString = (trackList) => {
   let result =
-    "Track                    Ninja Level                    # of Ratings \n";
+    "Track                    Ninja Level                    # of Ratings \n" +
+    "-------------------------------------------------------------------- \n";
   trackList.forEach((track) => {
     result +=
       capitalize(track._id) +

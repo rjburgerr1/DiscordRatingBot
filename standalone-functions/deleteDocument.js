@@ -1,7 +1,7 @@
-const { db } = require("../data/mongoUtil");
+const { tracksDB } = require("../data/mongoUtil");
 const deleteDocument = async (rider, track) => {
   try {
-    const response = await db.collection("ratings").deleteOne(
+    const response = await tracksDB.collection("ratings").deleteOne(
       {
         author: rider.username,
         track: track,

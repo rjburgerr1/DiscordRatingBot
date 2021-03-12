@@ -1,13 +1,15 @@
 const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
+const config = require("./data/config");
 const client = new Discord.Client();
 const fs = require("fs");
 var mongoUtil = require("./data/mongoUtil");
 
 async function start() {
-  // other app startup stuff...
-  await mongoUtil.init();
-  // other app startup stuff...
+  try {
+    await mongoUtil.init();
+  } catch (error) {
+    console.log(error);
+  }
 }
 start().then(() => {
   client.commands = new Discord.Collection();
@@ -32,9 +34,10 @@ start().then(() => {
   });
 
   client.on("message", (message) => {
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    if (!message.content.startsWith(config.prefix) || message.author.bot)
+      return;
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const args = message.content.slice(config.prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
     if (!client.commands.has(commandName)) return;
@@ -54,5 +57,5 @@ start().then(() => {
     }
   });
 
-  client.login(token);
+  client.login(config.discordToken);
 });
