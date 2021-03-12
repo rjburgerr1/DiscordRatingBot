@@ -1,6 +1,5 @@
 const { Ratings } = require("../data/mongoUtil");
 const fs = require("fs");
-const serveData = require("../standalone-functions/serveData");
 const {
   collectTrackArg,
 } = require("../standalone-functions/collectTrackArgument");
@@ -18,34 +17,37 @@ module.exports = {
   args: false,
   async execute(message, args, discordClient) {
     // TODO add check for arg1 and arg2 and add collectors for each when not present
-
-    const track = await getTrackArgument(message, args, discordClient);
-    const rating = await getRatingArgument(message, args, discordClient);
-    createRatingDocument({
-      author: message.author.username,
-      track: track.toLowerCase(),
-      level_opinion: Number(rating),
-    });
-    console.log(track + " " + rating);
-    message.author.send("```Are you sure you want to add this rating? (y)```");
-    const filter = (msg) => {
-      if (!msg.author.bot && msg.content.toLowerCase() === "y") {
-        // Don't accept bot messages
-        return true;
-      }
-    };
-    const collectedMessage = await message.channel.awaitMessages(filter, {
-      max: 1,
-      time: 15000,
-      errors: ["time"],
-    });
-    console.log(collectedMessage.first().content);
-    if (collectedMessage.first().content.toLowerCase() === "y") {
+    try {
+      const track = await getTrackArgument(message, args, "rate");
+      const rating = await getRatingArgument(message, args, discordClient);
       createRatingDocument({
         author: message.author.username,
         track: track.toLowerCase(),
         level_opinion: Number(rating),
       });
+      message.author.send(
+        "```Are you sure you want to add this rating? (y)```"
+      );
+      const filter = (msg) => {
+        if (!msg.author.bot && msg.content.toLowerCase() === "y") {
+          // Don't accept bot messages
+          return true;
+        }
+      };
+      const collectedMessage = await message.channel.awaitMessages(filter, {
+        max: 1,
+        time: 20000,
+        errors: ["time"],
+      });
+      if (collectedMessage.first().content.toLowerCase() === "y") {
+        createRatingDocument({
+          author: message.author.username,
+          track: track.toLowerCase(),
+          level_opinion: Number(rating),
+        });
+      }
+    } catch (error) {
+      message.author.send("```No response within 20 seconds, Try Again.```");
     }
     /*
     // Track Rating
@@ -140,10 +142,10 @@ async function createRatingDocument(ratingInfo) {
   return rating;
 }
 
-const getTrackArgument = async (message, args, discordClient) => {
+const getTrackArgument = async (message, args, deleteStr) => {
   let track;
   if (args[0] === undefined) {
-    track = await collectTrackArg(message.author, message, discordClient);
+    track = await collectTrackArg(message.author, message, deleteStr);
   } else {
     // Track Name
     track = args[0];
