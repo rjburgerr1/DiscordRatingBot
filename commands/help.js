@@ -3,7 +3,7 @@ module.exports = {
   description: "Describes how to rate tracks",
   execute(message) {
     message.author.send(
-      "```To rate a track: \n type '!rate [track-name] [ninja-level]'	\n\n\n" +
+      "```" +
         "commands: [optional] \n" +
         " - !help \n" +
         " - !rate [track-name] [ninja-level] - Rate a track \n" +
