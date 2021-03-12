@@ -4,6 +4,7 @@ const url =
 const { MongoClient } = require("mongodb");
 const config = require("./config.js");
 const Ratings = require("../data/ratings.js");
+const Reports = require("../data/reports.js");
 
 class MongoBot {
   constructor() {
@@ -15,8 +16,10 @@ class MongoBot {
     await this.client.connect();
     console.log("connected");
 
-    this.db = this.client.db(config.db);
-    this.Ratings = new Ratings(this.db);
+    this.tracksDB = this.client.db(config.tracksDB);
+    this.reportsDB = this.client.db(config.reportsDB);
+    this.Ratings = new Ratings(this.tracksDB);
+    this.Reports = new Reports(this.reportsDB);
   }
 }
 
