@@ -1,4 +1,4 @@
-const collectBasic = async (channel, message, prompt) => {
+const collectBasic = async (channel, message, prompt, timeout) => {
   // Prompt for whichever argument is being collected
   channel.send(prompt);
   // Filter for track argument message
@@ -8,12 +8,18 @@ const collectBasic = async (channel, message, prompt) => {
       return true;
     }
   };
-  const collectedMessage = await message.channel.awaitMessages(filter, {
-    max: 1,
-    time: 15000,
-    errors: ["time"],
-  });
-  return collectedMessage.first().content;
+  try {
+    const collectedMessage = await message.channel.awaitMessages(filter, {
+      max: 1,
+      time: timeout,
+      errors: ["time"],
+    });
+    return collectedMessage.first().content;
+  } catch (error) {
+    message.author.send(
+      "```No response within + " + timeout.slice(0, -3) + ". Try Again.```"
+    );
+  }
 };
 
 module.exports.collectBasic = collectBasic;
