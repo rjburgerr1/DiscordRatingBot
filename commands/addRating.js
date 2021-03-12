@@ -155,10 +155,11 @@ const getTrackArgument = async (message, args, deleteStr) => {
 
 const getRatingArgument = async (message, args, discordClient) => {
   let track;
-  if (args[1] === undefined) {
+  if (args[1] === undefined || typeof (args[1] !== Number)) {
+    //message.author.send(```Type a number for the rating (1.0-9.0```);
     track = await collectRatingArg(message.author, message, discordClient);
   } else {
-    // Track Name
+    // Rating Number
     track = args[1];
   }
   return track;
