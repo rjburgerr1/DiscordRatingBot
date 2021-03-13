@@ -1,13 +1,8 @@
-const collectBasic = async (channel, message, prompt, timeout) => {
+const collectBasic = async (channel, message, prompt, timeout, filter) => {
   // Prompt for whichever argument is being collected
   channel.send(prompt);
   // Filter for track argument message
-  const filter = (msg) => {
-    if (!msg.author.bot) {
-      // Don't accept bot messages
-      return true;
-    }
-  };
+
   try {
     const collectedMessage = await message.channel.awaitMessages(filter, {
       max: 1,
@@ -17,7 +12,9 @@ const collectBasic = async (channel, message, prompt, timeout) => {
     return collectedMessage.first().content;
   } catch (error) {
     message.author.send(
-      "```No response within + " + timeout.slice(0, -3) + ". Try Again.```"
+      "```No response within " +
+        String(timeout).slice(0, -3) +
+        " seconds. Try Again.```"
     );
   }
 };

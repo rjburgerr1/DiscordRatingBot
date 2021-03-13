@@ -7,7 +7,7 @@ module.exports = {
         "commands: [optional] \n" +
         " - !help \n" +
         " - !rate [track-name] [ninja-level] - Rate a track \n" +
-        " - !list - list tracks and their ratings" +
+        " - !list - list tracks and their ratings\n" +
         " - !rider [rider-name] - List all of a rider's ratings \n" +
         " - !delete [track-name] - Delete a rating that you made previously```"
     );

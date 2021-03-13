@@ -1,7 +1,4 @@
 const { deleteDocument } = require("../standalone-functions/deleteDocument");
-const {
-  collectTrackArg,
-} = require("../standalone-functions/collectTrackArgument");
 module.exports = {
   name: "delete",
   description: "Deletes a track rating of your own",
