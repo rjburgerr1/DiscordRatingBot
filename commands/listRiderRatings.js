@@ -25,13 +25,20 @@ const toString = (documents) => {
 };
 
 const getRiderArgument = async (message, args) => {
+  const riderArgumentFilter = (msg) => {
+    if (!msg.author.bot) {
+      // Don't accept bot messages
+      return true;
+    }
+  };
   let track;
   if (args[0] === undefined) {
     track = await collectBasic(
       message.author,
       message,
       "```Enter a rider to receive their ratings```",
-      20000
+      20000,
+      riderArgumentFilter
     );
   } else {
     // Track Name
