@@ -1,4 +1,4 @@
-const { db } = require("../data/mongoUtil");
+const { tracksDB } = require("../data/mongoUtil");
 const calculateLevels = async (channel, message, client) => {
   /*
   const groupByTrackArray = await db
@@ -9,7 +9,8 @@ const calculateLevels = async (channel, message, client) => {
   console.log(groupByTrackArray);
   */
 
-  const averageLevelPerTrackArray = await db
+  // Returns an array of track objects
+  const averageLevelPerTrackArray = await tracksDB
     .collection("ratings")
     .aggregate([
       {
@@ -23,10 +24,7 @@ const calculateLevels = async (channel, message, client) => {
     ])
     .toArray();
 
-  console.log(averageLevelPerTrackArray[0].level_average);
-  console.log(averageLevelPerTrackArray);
-
-  console.log(await db.collection("ratings").countDocuments());
+  console.log(await tracksDB.collection("ratings").countDocuments());
   return averageLevelPerTrackArray;
 };
 
