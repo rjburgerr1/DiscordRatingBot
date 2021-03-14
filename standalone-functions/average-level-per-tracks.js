@@ -24,7 +24,6 @@ const calculateLevels = async (channel, message, client) => {
     ])
     .toArray();
 
-  console.log(await tracksDB.collection("ratings").countDocuments());
   return averageLevelPerTrackArray;
 };
 

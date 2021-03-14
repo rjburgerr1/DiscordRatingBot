@@ -37,7 +37,14 @@ start().then(() => {
     if (!message.content.startsWith(config.prefix) || message.author.bot)
       return;
 
-    const args = message.content.slice(config.prefix.length).trim().split(/ +/);
+    // Argument convention requires a "-" to split arguments. Trim whitespace around command name, and all arguments.
+    const args = message.content
+      .slice(config.prefix.length)
+      .trim()
+      .split(/-+/)
+      .map(function (item) {
+        return item.trim();
+      });
     const commandName = args.shift().toLowerCase();
 
     if (!client.commands.has(commandName)) return;
