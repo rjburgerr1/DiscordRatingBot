@@ -8,7 +8,7 @@ module.exports = {
   async execute(message, args) {
     const trackList = await calculateLevels();
 
-    message.author.send("```" + toString(trackList) + " ```");
+    message.author.send("```xl\n" + toString(trackList) + "```");
   },
 };
 
