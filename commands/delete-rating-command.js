@@ -1,4 +1,6 @@
-const { deleteDocument } = require("../standalone-functions/deleteDocument");
+const {
+  deleteDocument,
+} = require("../standalone-functions/delete-rider-rating");
 module.exports = {
   name: "delete",
   description: "Deletes a track rating of your own",

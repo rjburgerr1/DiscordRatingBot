@@ -1,6 +1,6 @@
-const { Ratings } = require("../data/mongoUtil");
+const { Ratings } = require("../data/mongodb-utility");
 const fs = require("fs");
-const { collectBasic } = require("../standalone-functions/collectBasic");
+const { collectBasic } = require("../standalone-functions/message-collector");
 
 let rawdata = fs.readFileSync("./data/tracks.json");
 

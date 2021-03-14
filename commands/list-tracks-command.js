@@ -1,4 +1,6 @@
-const { calculateLevels } = require("../standalone-functions/calculateLevels");
+const {
+  calculateLevels,
+} = require("../standalone-functions/average-level-per-tracks");
 module.exports = {
   name: "list",
   description:
