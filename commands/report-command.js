@@ -1,5 +1,5 @@
-const { Reports } = require("../data/mongoUtil");
-const { collectBasic } = require("../standalone-functions/collectBasic");
+const { Reports } = require("../data/mongodb-utility");
+const { collectBasic } = require("../standalone-functions/message-collector");
 module.exports = {
   name: "report",
   description: "Report a bug or feature",
