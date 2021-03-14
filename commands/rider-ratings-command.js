@@ -1,5 +1,5 @@
-const { getRider } = require("../standalone-functions/getRider");
-const { collectBasic } = require("../standalone-functions/collectBasic");
+const { getRider } = require("../standalone-functions/find-rider-ratings");
+const { collectBasic } = require("../standalone-functions/message-collector");
 module.exports = {
   name: "rider",
   description: "Lists a rider and their ratings of tracks",

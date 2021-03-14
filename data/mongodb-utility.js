@@ -3,8 +3,8 @@ const url =
 
 const { MongoClient } = require("mongodb");
 const config = require("./config.js");
-const Ratings = require("../data/ratings.js");
-const Reports = require("../data/reports.js");
+const Ratings = require("./ratings-database-class.js");
+const Reports = require("./reports-database-class.js");
 
 class MongoBot {
   constructor() {
