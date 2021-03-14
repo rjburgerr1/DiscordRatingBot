@@ -1,4 +1,4 @@
-const { tracksDB } = require("../data/mongoUtil");
+const { tracksDB } = require("../data/mongodb-utility");
 const getRider = async (rider) => {
   const riderDocs = tracksDB
     .collection("ratings")
