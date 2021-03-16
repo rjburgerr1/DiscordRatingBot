@@ -3,13 +3,14 @@ module.exports = {
   description: "Describes how to rate tracks",
   execute(message) {
     message.author.send(
-      "```" +
-        "commands: [optional] \n" +
+      "```ini\n" +
+        "commands: --------------[optional-arguments] ------------------ Command Info \n" +
         " - !help \n" +
-        " - !rate [track-name] [ninja-level] - Rate a track \n" +
-        " - !list - list tracks and their ratings\n" +
-        " - !rider [rider-name] - List all of a rider's ratings \n" +
-        " - !delete [track-name] - Delete a rating that you made previously```"
+        " - !rate                [track-name] [ninja-level]            - Rate a track \n" +
+        " - !list                                                      - list tracks and their ratings\n" +
+        " - !rider               [rider-name] [level-filter]           - List all of a rider's ratings \n" +
+        " - !report              [b/f]                                 - Report a bug or feature to the bot \n" +
+        " - !delete              [track-name]                          - Delete a rating that you made previously```"
     );
   },
 };
