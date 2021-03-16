@@ -1,6 +1,8 @@
 const {
   deleteDocument,
 } = require("../standalone-functions/delete-rider-rating");
+const collectBasic = require("../standalone-functions/message-collector");
+
 module.exports = {
   name: "delete",
   description: "Deletes a track rating of your own",
@@ -14,7 +16,7 @@ module.exports = {
 const getTrackArgument = async (message, args, rateStr) => {
   let track;
   if (args[0] === undefined) {
-    track = await collectTrackArg(message.author, message, rateStr);
+    track = await collectBasic(message.author, message, rateStr);
   } else {
     // Track Name
     track = args[0];
