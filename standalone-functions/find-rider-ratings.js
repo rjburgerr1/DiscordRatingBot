@@ -3,7 +3,8 @@ const getRider = async (rider) => {
   const riderDocs = tracksDB
     .collection("ratings")
     .find({ author: rider })
-    .collation({ locale: "en", strength: 1 });
+    .collation({ locale: "en", strength: 1 })
+    .sort({ level_opinion: -1 });
 
   return riderDocs.toArray();
 };
