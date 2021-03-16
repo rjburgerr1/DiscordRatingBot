@@ -5,12 +5,16 @@ module.exports = {
   description: "Lists a rider and their ratings of tracks",
   async execute(message, args) {
     const riderName = await getRiderArgument(message, args);
-    const riderWithRatings = await getRider(riderName);
+    // Args[1] === level_opinion filter argument
+    const riderWithRatings = await getRider(riderName, args[1]);
     message.author.send("```" + toString(riderWithRatings) + " ```");
   },
 };
 
 const toString = (documents) => {
+  if (documents.length === 0) {
+    return "Could not find any ratings matching your search criteria";
+  }
   let result = "       Rider - " + documents[0].author + "\n";
   result += "------------------------------------------- \n";
   result += "Tracks                Ninja Level (Opinion) \n\n";
