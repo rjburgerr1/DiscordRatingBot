@@ -1,6 +1,6 @@
 const { tracksDB } = require("../data/mongodb-utility.js");
-const calculateLevels = async (trackName) => {
-  // DRY cannot apply here as server-side functionality mixed with mongodb pipelines makes using external variables for the track filter very hard to inject.
+const findRatings = async (trackName) => {
+  // DRY (maybe( cannot apply here as server-side functionality mixed with mongodb pipelines makes using external variables for the track filter very hard to inject.
   if (trackName === undefined) {
     return await tracksDB
       .collection("ratings")
@@ -10,6 +10,12 @@ const calculateLevels = async (trackName) => {
             _id: "$track",
             level_average: { $avg: "$level_opinion" },
             count: { $sum: 1 },
+            lowestRating: {
+              $min: { minRating: "$level_opinion", author: "$author" },
+            },
+            highestRating: {
+              $max: { maxRating: "$level_opinion", author: "$author" },
+            },
           },
         },
         { $sort: { level_average: -1 } },
@@ -25,6 +31,12 @@ const calculateLevels = async (trackName) => {
             _id: "$track",
             level_average: { $avg: "$level_opinion" },
             count: { $sum: 1 },
+            lowestRating: {
+              $min: { minRating: "$level_opinion", author: "$author" },
+            },
+            highestRating: {
+              $max: { maxRating: "$level_opinion", author: "$author" },
+            },
           },
         },
         { $sort: { level_average: -1 } },
@@ -34,4 +46,4 @@ const calculateLevels = async (trackName) => {
   // Returns an array of track objects
 };
 
-module.exports.calculateLevels = calculateLevels;
+exports.findRatings = findRatings;
