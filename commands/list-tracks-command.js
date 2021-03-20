@@ -6,7 +6,7 @@ module.exports = {
   description:
     "Lists all track and their corresponding ninja levels. As well as # of ratings.",
   async execute(message, args) {
-    const trackList = await calculateLevels();
+    const trackList = await calculateLevels(args[0]);
 
     message.author.send("```xl\n" + toString(trackList) + "```");
   },
