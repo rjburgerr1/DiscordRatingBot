@@ -16,6 +16,7 @@ const collectBasic = async (channel, message, prompt, timeout, filter) => {
         String(timeout).slice(0, -3) +
         " seconds. Try Again.```"
     );
+    throw new Error("No messages collected");
   }
 };
 
