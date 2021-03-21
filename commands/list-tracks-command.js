@@ -4,7 +4,19 @@ module.exports = {
   description:
     "Lists all track and their corresponding ninja levels. As well as # of ratings.",
   async execute(message, args) {
-    const trackList = await findRatings(args[0]);
+    let trackName, levelFilter;
+
+    if (args.length === 2) {
+      trackName = args[0];
+      levelFilter = args[1];
+    } else if (!isNaN(Number(args[0]))) {
+      trackName = undefined;
+      levelFilter = args[0];
+    } else {
+      trackName = args[0];
+      levelFilter = undefined;
+    }
+    const trackList = await findRatings(trackName, levelFilter);
     message.author.send("```xl\n" + toString(trackList) + "```");
   },
 };
