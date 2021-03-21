@@ -1,10 +1,6 @@
 const { Ratings } = require("../data/mongodb-utility");
-const fs = require("fs");
+
 const { collectBasic } = require("../standalone-functions/message-collector");
-
-let rawdata = fs.readFileSync("./data/tracks.json");
-
-const trackFile = JSON.parse(rawdata);
 
 module.exports = {
   name: "rate",
