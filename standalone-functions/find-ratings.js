@@ -18,7 +18,7 @@ const findRatings = async (trackName, levelFilter) => {
     { $sort: { level_average: -1 } },
   ];
 
-  if (levelFilter === undefined) {
+  if (trackName !== undefined && levelFilter === undefined) {
     queryFilters.unshift({ $match: { track: trackName } });
   } else if (trackName === undefined && levelFilter !== undefined) {
     queryFilters.unshift({
