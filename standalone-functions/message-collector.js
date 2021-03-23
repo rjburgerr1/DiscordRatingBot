@@ -1,4 +1,11 @@
-const collectBasic = async (channel, message, prompt, timeout, filter) => {
+const collectBasic = async (
+  channel,
+  message,
+  prompt,
+  timeout,
+  filter,
+  response
+) => {
   // Prompt for whichever argument is being collected
   channel.send(prompt);
   // Filter for track argument message
@@ -11,13 +18,17 @@ const collectBasic = async (channel, message, prompt, timeout, filter) => {
     });
     return collectedMessage.first().content;
   } catch (error) {
-    message.author.send(
-      "```No response within " +
-        String(timeout).slice(0, -3) +
-        " seconds. Try Again.```"
-    );
+    if (response !== undefined) {
+      message.author.send(response);
+    }
     throw new Error("No messages collected");
   }
 };
 
 module.exports.collectBasic = collectBasic;
+
+/*  message.author.send(
+	"```No response within " +
+	String(timeout).slice(0, -3) +
+	" seconds. Try Again.```"
+);*/
