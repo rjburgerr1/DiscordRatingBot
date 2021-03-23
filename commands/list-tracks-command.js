@@ -1,6 +1,7 @@
 const { findRatings } = require("../standalone-functions/find-ratings");
 const { collectBasic } = require("../standalone-functions/message-collector");
 const { paginate } = require("../standalone-functions/paginate");
+const { capitalize } = require("../standalone-functions/capitalize");
 
 module.exports = {
   name: "list",
@@ -81,9 +82,9 @@ const toString = (trackList) => {
     "---------------------------------------------------------------------------------------------------------------------------------------\n";
   trackList.forEach((track) => {
     result +=
-      capitalize(track._id) +
+      capitalize(track.track) +
       //25 because that is how many whitespace characters are between the end of "track" and the beginning of "Ninja Level". Similar idea down below for "31"
-      formatStringSpace(track._id, 25) +
+      formatStringSpace(track.track, 25) +
       track.level_average +
       formatStringSpace(String(track.level_average), 31) +
       track.count +
@@ -103,10 +104,6 @@ const toString = (trackList) => {
       "\n";
   });
   return paginate(result, /(.|\n){1,1900}\n/g);
-};
-
-const capitalize = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
 const formatStringSpace = (string, whitespace) => {
