@@ -7,9 +7,14 @@ module.exports = {
   name: "rider",
   description: "Lists a rider and their ratings of tracks",
   async execute(message, args) {
+    const [trackName, levelFilter] = filterArgs(args);
     const riderName = await getRiderArgument(message, args);
     // Args[1] === level_opinion filter argument
-    const riderSpecificRatings = await getRider(riderName, args[1]);
+    const riderSpecificRatings = await getRider(
+      riderName,
+      levelFilter,
+      trackName
+    );
     const averageTrackRatings = await findRatings(riderName, args[1]);
     const joinedRatings = mergeArraysByTrack(
       riderSpecificRatings,
@@ -86,4 +91,19 @@ const mergeArraysByTrack = (riderRatings, trackRatings) => {
     });
   }
   return merged;
+};
+
+const filterArgs = (args) => {
+  let trackName, levelFilter;
+  if (args[1] === undefined) {
+    trackName = undefined;
+    levelFilter = undefined;
+  } else if (!isNaN(Number(args[1]))) {
+    trackName = undefined;
+    levelFilter = args[1];
+  } else if (isNaN(Number(args[1]))) {
+    trackName = args[1];
+    levelFilter = undefined;
+  }
+  return [trackName, levelFilter];
 };

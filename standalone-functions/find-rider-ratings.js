@@ -1,5 +1,5 @@
 const { tracksDB } = require("../data/mongodb-utility");
-const getRider = async (rider, levelFilter) => {
+const getRider = async (rider, levelFilter, trackName) => {
   try {
     var queryFilters = { author: rider };
     if (levelFilter !== undefined) {
@@ -8,6 +8,11 @@ const getRider = async (rider, levelFilter) => {
         $lt: Number(levelFilter) + 1,
       };
     }
+
+    if (trackName !== undefined) {
+      queryFilters["track"] = trackName;
+    }
+    console.log(queryFilters);
 
     return await tracksDB
       .collection("ratings")
