@@ -15,12 +15,20 @@ const findRatings = async (trackName, levelFilter) => {
         },
       },
     },
+    {
+      $project: {
+        _id: 0,
+        track: "$_id",
+        count: 1,
+        level_average: 1,
+        lowestRating: 1,
+        highestRating: 1,
+      },
+    },
     { $sort: { level_average: -1 } },
   ];
 
-  if (trackName !== undefined && levelFilter === undefined) {
-    queryFilters.unshift({ $match: { track: trackName } });
-  } else if (trackName === undefined && levelFilter !== undefined) {
+  if (trackName === undefined && levelFilter !== undefined) {
     let [lowerBoundLevel, higherBoundLevel] = setDecOrInt(levelFilter);
     queryFilters.splice(1, 0, {
       $match: {
