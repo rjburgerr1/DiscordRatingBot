@@ -21,17 +21,26 @@ const findRatings = async (trackName, levelFilter) => {
   if (trackName !== undefined && levelFilter === undefined) {
     queryFilters.unshift({ $match: { track: trackName } });
   } else if (trackName === undefined && levelFilter !== undefined) {
-    queryFilters.unshift({
+    let [lowerBoundLevel, higherBoundLevel] = setDecOrInt(levelFilter);
+    queryFilters.splice(1, 0, {
       $match: {
-        level_opinion: {
-          $gte: Number(levelFilter),
-          $lt: Number(levelFilter) + 1,
+        level_average: {
+          $gte: Number(lowerBoundLevel),
+          $lte: Number(higherBoundLevel),
         },
       },
     });
   }
   return await tracksDB.collection("ratings").aggregate(queryFilters).toArray();
   // Returns an array of track objects
+};
+
+const setDecOrInt = (levelFilter) => {
+  if (levelFilter.indexOf(".") == -1) {
+    return [levelFilter, Number(levelFilter) + 0.99];
+  } else {
+    return [levelFilter, levelFilter];
+  }
 };
 
 exports.findRatings = findRatings;
