@@ -48,6 +48,7 @@ async function createRatingDocument(ratingInfo, message) {
     message.author.send("```Added Rating!```");
     return rating;
   } catch (error) {
+    message.author.send("Could not add rating.");
     console.log(error);
   }
 }
@@ -92,9 +93,10 @@ const getRatingArgument = async (message, args) => {
     rating = await collectBasic(
       message.author,
       message,
-      "```Give the track a ninja rating (1.0-9.0)```",
+      "```Give the track a ninja rating (1.0 - 9.0)```",
       20000,
-      trackRatingFilter
+      trackRatingFilter,
+      "```No response within 20 seconds. Try !rate again```"
     );
   } else {
     // Rating Number
