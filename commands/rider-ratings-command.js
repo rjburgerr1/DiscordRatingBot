@@ -1,6 +1,8 @@
 const { getRider } = require("../standalone-functions/find-rider-ratings");
 const { collectBasic } = require("../standalone-functions/message-collector");
 const { findRatings } = require("../standalone-functions/find-ratings");
+const { capitalize } = require("../standalone-functions/capitalize");
+
 module.exports = {
   name: "rider",
   description: "Lists a rider and their ratings of tracks",
@@ -29,7 +31,7 @@ const toString = (documents) => {
     "Tracks                Ninja Level (Opinion)                Ninja Level (Average)\n\n";
   documents.forEach((rating) => {
     result +=
-      rating.track +
+      capitalize(rating.track) +
       formatStringSpace(rating.track, 22) +
       rating.level_opinion +
       formatStringSpace(rating.level_opinion, 37) +
