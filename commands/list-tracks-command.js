@@ -2,6 +2,38 @@ const { findRatings } = require("../standalone-functions/find-ratings");
 const { collectBasic } = require("../standalone-functions/message-collector");
 const { paginate } = require("../standalone-functions/paginate");
 
+module.exports = {
+  name: "list",
+  description:
+    "Lists all track and their corresponding ninja levels. As well as # of ratings.",
+  async execute(message, args) {
+    const [trackName, levelFilter] = filterArgs(args);
+
+    // mongodb database query function call
+    const trackList = await findRatings(trackName, levelFilter);
+
+    // Paginate and format track list
+    pages = toString(trackList);
+
+    sendPageMessage(message, pages, 1);
+    while (true) {
+      try {
+        let changePageNumber = await collectBasic(
+          message.author,
+          message,
+          "```Type page number to display page of results```",
+          20000,
+          filterCollector
+        );
+        sendPageMessage(message, pages, changePageNumber);
+      } catch (error) {
+        console.log(error);
+        break;
+      }
+    }
+  },
+};
+
 const filterArgs = (args) => {
   let trackName, levelFilter;
   if (args.length === 2) {
@@ -41,38 +73,6 @@ const sendPageMessage = (message, pages, pageNumber) => {
         "```"
     );
   }
-};
-
-module.exports = {
-  name: "list",
-  description:
-    "Lists all track and their corresponding ninja levels. As well as # of ratings.",
-  async execute(message, args) {
-    const [trackName, levelFilter] = filterArgs(args);
-
-    // mongodb database query function call
-    const trackList = await findRatings(trackName, levelFilter);
-
-    // Paginate and format track list
-    pages = toString(trackList);
-
-    sendPageMessage(message, pages, 1);
-    while (true) {
-      try {
-        let changePageNumber = await collectBasic(
-          message.author,
-          message,
-          "```Type page number to display page of results```",
-          20000,
-          filterCollector
-        );
-        sendPageMessage(message, pages, changePageNumber);
-      } catch (error) {
-        console.log(error);
-        break;
-      }
-    }
-  },
 };
 
 const toString = (trackList) => {
