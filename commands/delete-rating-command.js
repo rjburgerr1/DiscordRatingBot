@@ -8,7 +8,6 @@ module.exports = {
   description: "Deletes a track rating of your own",
   async execute(message, args) {
     const track = await getTrackArgument(message, args);
-
     deleteDocument(message.author, track);
   },
 };
@@ -26,7 +25,8 @@ const getTrackArgument = async (message, args) => {
       message,
       "```Type the name of the track that you want to delete.```",
       20000,
-      trackArgumentFilter
+      trackArgumentFilter,
+      "```No track name received within 20 seconds. Try !delete again."
     );
   } else {
     // Track Name

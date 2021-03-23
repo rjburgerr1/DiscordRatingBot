@@ -42,7 +42,8 @@ const getRiderArgument = async (message, args) => {
       message,
       "```Enter a rider to receive their ratings```",
       20000,
-      riderArgumentFilter
+      riderArgumentFilter,
+      "```No rider name received within 20 seconds. Try !rider again."
     );
   } else {
     // Track Name

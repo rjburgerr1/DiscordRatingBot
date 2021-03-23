@@ -9,7 +9,6 @@ const collectBasic = async (
   // Prompt for whichever argument is being collected
   channel.send(prompt);
   // Filter for track argument message
-
   try {
     const collectedMessage = await message.channel.awaitMessages(filter, {
       max: 1,

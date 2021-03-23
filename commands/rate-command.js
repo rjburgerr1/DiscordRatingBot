@@ -37,7 +37,6 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-      //message.author.send("```No response within 20 seconds, Try Again.```");
     }
   },
 };
@@ -66,7 +65,8 @@ const getTrackArgument = async (message, args, commandType) => {
       message,
       "```Type the name of the track that you want to " + commandType + ".```",
       20000,
-      trackArgumentFilter
+      trackArgumentFilter,
+      "```No track name received within 20 seconds. Try !rate again```"
     );
   } else {
     // Track Name
@@ -96,7 +96,7 @@ const getRatingArgument = async (message, args) => {
       "```Give the track a ninja rating (1.0 - 9.0)```",
       20000,
       trackRatingFilter,
-      "```No response within 20 seconds. Try !rate again```"
+      "```No track rating received within 20 seconds. Try !rate again```"
     );
   } else {
     // Rating Number
