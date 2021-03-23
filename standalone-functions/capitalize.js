@@ -1,4 +1,7 @@
 const capitalize = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  return string
+    .toLowerCase()
+    .replace(/(^|\s)\S/g, (firstLetter) => firstLetter.toUpperCase());
 };
+
 module.exports.capitalize = capitalize;
