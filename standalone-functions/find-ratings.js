@@ -20,7 +20,8 @@ const findRatings = async (trackName, levelFilter) => {
         _id: 0,
         track: "$_id",
         count: 1,
-        level_average: 1,
+        level_average: { $round: ["$level_average", 2] }, // round level_average to hundreths place before projecting
+
         lowestRating: 1,
         highestRating: 1,
       },
