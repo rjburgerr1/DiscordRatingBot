@@ -20,6 +20,7 @@ module.exports = {
       riderSpecificRatings,
       averageTrackRatings
     );
+
     message.author.send("```ml\n" + toString(joinedRatings) + " ```");
   },
 };

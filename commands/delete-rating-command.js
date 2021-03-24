@@ -2,13 +2,36 @@ const {
   deleteDocument,
 } = require("../standalone-functions/delete-rider-rating");
 const { collectBasic } = require("../standalone-functions/message-collector");
+const { getRider } = require("../standalone-functions/find-rider-ratings");
 
 module.exports = {
   name: "delete",
   description: "Deletes a track rating of your own",
   async execute(message, args) {
-    const track = await getTrackArgument(message, args);
-    deleteDocument(message.author, track);
+    try {
+      const track = await getTrackArgument(message, args);
+      const ratingToDelete = await getRider(
+        message.author.username,
+        undefined,
+        track
+      );
+
+      message.author.send(
+        "```yaml\n" +
+          "Rider: " +
+          ratingToDelete[0].author +
+          "\nTrack: " +
+          ratingToDelete[0].track +
+          "\nLevel Opinion: " +
+          ratingToDelete[0].level_opinion +
+          "\n```"
+      );
+
+      await getConfirmation(message, args);
+      deleteDocument(message.author, track);
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 
@@ -33,4 +56,21 @@ const getTrackArgument = async (message, args) => {
     track = args[0];
   }
   return track;
+};
+
+const getConfirmation = async (message, trackName) => {
+  const warningConfirmationFilter = (msg) => {
+    if (!msg.author.bot && msg.content.toLowerCase() === "y") {
+      return true;
+    }
+  };
+
+  await collectBasic(
+    message.author,
+    message,
+    "```Are you sure you want to delete this rating? (y)```",
+    20000,
+    warningConfirmationFilter,
+    "```Did not receive confirmation, try !delete again.```"
+  );
 };

@@ -12,8 +12,6 @@ const getRider = async (rider, levelFilter, trackName) => {
     if (trackName !== undefined) {
       queryFilters["track"] = trackName;
     }
-    console.log(queryFilters);
-
     return await tracksDB
       .collection("ratings")
       .find(queryFilters)
