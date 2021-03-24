@@ -3,6 +3,7 @@ const {
 } = require("../standalone-functions/delete-rider-rating");
 const { collectBasic } = require("../standalone-functions/message-collector");
 const { getRider } = require("../standalone-functions/find-rider-ratings");
+const { capitalize } = require("../standalone-functions/capitalize");
 
 module.exports = {
   name: "delete",
@@ -21,7 +22,7 @@ module.exports = {
           "Rider: " +
           ratingToDelete[0].author +
           "\nTrack: " +
-          ratingToDelete[0].track +
+          capitalize(ratingToDelete[0].track) +
           "\nLevel Opinion: " +
           ratingToDelete[0].level_opinion +
           "\n```"
