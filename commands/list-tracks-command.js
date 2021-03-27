@@ -12,7 +12,6 @@ module.exports = {
 
     // mongodb database query function call
     const trackList = await findRatings(trackName, levelFilter);
-
     // Paginate and format track list
     pages = toString(trackList);
 
@@ -78,17 +77,21 @@ const sendPageMessage = (message, pages, pageNumber) => {
 
 const toString = (trackList) => {
   let result =
-    "Track                    Ninja Level                    # of Ratings                    Lowest Rating                    Highest Rating\n" +
-    "---------------------------------------------------------------------------------------------------------------------------------------\n";
+    "Track                    Level (Average)       Level (Median)       Level (Mode)         # of Ratings         Lowest Rating             Highest Rating\n" +
+    "------------------------------------------------------------------------------------------------------------------------------------------------------\n";
   trackList.forEach((track) => {
     result +=
       capitalize(track.track) +
       //25 because that is how many whitespace characters are between the end of "track" and the beginning of "Ninja Level". Similar idea down below for "31"
       formatStringSpace(track.track, 25) +
       track.level_average +
-      formatStringSpace(String(track.level_average), 31) +
+      formatStringSpace(String(track.level_average), 22) +
+      track.level_median +
+      formatStringSpace(String(track.level_median), 21) +
+      track.level_mode +
+      formatStringSpace(String(track.level_mode), 21) +
       track.count +
-      formatStringSpace(String(track.count), 32) +
+      formatStringSpace(String(track.count), 21) +
       track.lowestRating.author +
       " - " +
       track.lowestRating.minRating +
@@ -96,7 +99,7 @@ const toString = (trackList) => {
         track.lowestRating.author +
           " - " +
           String(track.lowestRating.minRating),
-        33
+        26
       ) +
       track.highestRating.maxRating +
       " - " +
