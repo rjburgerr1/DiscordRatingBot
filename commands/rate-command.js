@@ -1,6 +1,8 @@
 const { Ratings } = require("../data/mongodb-utility");
 const { collectBasic } = require("../standalone-functions/message-collector");
 
+const { capitalize } = require("../standalone-functions/capitalize");
+
 module.exports = {
   name: "rate",
   description: "Add a run",
@@ -10,35 +12,50 @@ module.exports = {
     try {
       const track = await getTrackArgument(message, args, "rate");
       const rating = await getRatingArgument(message, args);
-      message.author.send(
-        "```Are you sure you want to add this rating? (y)```"
-      );
 
-      const filter = (msg) => {
-        if (!msg.author.bot && msg.content.toLowerCase() === "y") {
-          // Don't accept bot messages
-          return true;
-        }
-      };
-      const collectedMessage = await message.channel.awaitMessages(filter, {
-        max: 1,
-        time: 20000,
-        errors: ["time"],
-      });
-      if (collectedMessage.first().content.toLowerCase() === "y") {
-        createRatingDocument(
-          {
-            author: message.author.username,
-            track: track.toLowerCase(),
-            level_opinion: Number(rating),
-          },
-          message
-        );
-      }
+      await getConfirmation(message, track, rating);
+
+      createRatingDocument(
+        {
+          author: message.author.username,
+          track: track.toLowerCase(),
+          level_opinion: Number(rating),
+        },
+        message
+      );
     } catch (error) {
       console.log(error);
     }
   },
+};
+
+const getConfirmation = async (message, track, rating) => {
+  const warningConfirmationFilter = (msg) => {
+    if (!msg.author.bot && msg.content.toLowerCase() === "y") {
+      return true;
+    }
+  };
+
+  // Confirmation Message
+  message.author.send(
+    "```yaml\n" +
+      "Rider: " +
+      message.author.username +
+      "\nTrack: " +
+      capitalize(track) +
+      "\nLevel Opinion: " +
+      rating +
+      "\n```"
+  );
+
+  await collectBasic(
+    message.author,
+    message,
+    "```Are you sure you want to add this rating? (y)```",
+    20000,
+    warningConfirmationFilter,
+    "```Did not receive confirmation, try !rate again.```"
+  );
 };
 
 async function createRatingDocument(ratingInfo, message) {

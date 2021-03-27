@@ -17,17 +17,6 @@ module.exports = {
         track
       );
 
-      message.author.send(
-        "```yaml\n" +
-          "Rider: " +
-          ratingToDelete[0].author +
-          "\nTrack: " +
-          capitalize(ratingToDelete[0].track) +
-          "\nLevel Opinion: " +
-          ratingToDelete[0].level_opinion +
-          "\n```"
-      );
-
       await getConfirmation(message, args);
       deleteDocument(message.author, track);
     } catch (error) {
@@ -59,12 +48,24 @@ const getTrackArgument = async (message, args) => {
   return track;
 };
 
-const getConfirmation = async (message, trackName) => {
+const getConfirmation = async (message) => {
   const warningConfirmationFilter = (msg) => {
     if (!msg.author.bot && msg.content.toLowerCase() === "y") {
       return true;
     }
   };
+
+  // Confirmation Message
+  message.author.send(
+    "```yaml\n" +
+      "Rider: " +
+      ratingToDelete[0].author +
+      "\nTrack: " +
+      capitalize(ratingToDelete[0].track) +
+      "\nLevel Opinion: " +
+      ratingToDelete[0].level_opinion +
+      "\n```"
+  );
 
   await collectBasic(
     message.author,
