@@ -1,7 +1,14 @@
 const { findRatings } = require("../standalone-functions/find-ratings");
 const { collectBasic } = require("../standalone-functions/message-collector");
-const { paginate } = require("../standalone-functions/paginate");
+const {
+  paginate,
+  sendPageMessage,
+} = require("../standalone-functions/paginate");
 const { capitalize } = require("../standalone-functions/capitalize");
+
+const {
+  formatStringSpace,
+} = require("../standalone-functions/format-string-space");
 
 module.exports = {
   name: "list",
@@ -21,7 +28,7 @@ module.exports = {
         let changePageNumber = await collectBasic(
           message.author,
           message,
-          "```Type page number to display page of results```",
+          "```Type page numbers to display results```",
           20000,
           filterCollector
         );
@@ -57,26 +64,9 @@ const filterCollector = (msg) => {
   }
 };
 
-const sendPageMessage = (message, pages, pageNumber, pageHeader) => {
-  if (pageNumber > pages.length) {
-    message.author.send(
-      "```diff\n- Page number Doesn't exist! Retry a new page number, or another command. -\n```"
-    );
-  } else {
-    message.author.send(
-      "```xl\n" +
-        pages[pageNumber - 1] +
-        "----------\nPages " +
-        pageNumber +
-        "/" +
-        pages.length +
-        "```"
-    );
-  }
-};
-
 const toString = (trackList) => {
   let pageHeader =
+    "```xl\n" +
     "Track                    Level (Average)       Level (Median)       Level (Mode)         # of Ratings         Lowest Rating             Highest Rating\n" +
     "------------------------------------------------------------------------------------------------------------------------------------------------------\n";
   let result = "";
@@ -109,12 +99,4 @@ const toString = (trackList) => {
       "\n";
   });
   return paginate(result, /(.|\n){1,1800}\n/g, pageHeader);
-};
-
-const formatStringSpace = (string, whitespace) => {
-  let result = "";
-  for (i = 0; i < whitespace - string.length; i++) {
-    result += " ";
-  }
-  return result;
 };
