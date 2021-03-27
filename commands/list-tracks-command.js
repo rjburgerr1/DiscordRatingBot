@@ -57,7 +57,7 @@ const filterCollector = (msg) => {
   }
 };
 
-const sendPageMessage = (message, pages, pageNumber) => {
+const sendPageMessage = (message, pages, pageNumber, pageHeader) => {
   if (pageNumber > pages.length) {
     message.author.send(
       "```diff\n- Page number Doesn't exist! Retry a new page number, or another command. -\n```"
@@ -76,9 +76,11 @@ const sendPageMessage = (message, pages, pageNumber) => {
 };
 
 const toString = (trackList) => {
-  let result =
+  let pageHeader =
     "Track                    Level (Average)       Level (Median)       Level (Mode)         # of Ratings         Lowest Rating             Highest Rating\n" +
     "------------------------------------------------------------------------------------------------------------------------------------------------------\n";
+  let result = "";
+
   trackList.forEach((track) => {
     result +=
       capitalize(track.track) +
@@ -106,7 +108,7 @@ const toString = (trackList) => {
       track.highestRating.author +
       "\n";
   });
-  return paginate(result, /(.|\n){1,1900}\n/g);
+  return paginate(result, /(.|\n){1,1800}\n/g, pageHeader);
 };
 
 const formatStringSpace = (string, whitespace) => {
