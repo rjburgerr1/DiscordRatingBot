@@ -5,13 +5,13 @@ module.exports = {
     if (args.length === 0) {
       message.author.send(
         "```ini\n" +
-          "commands: --------------[optional-arguments] ------------------ Command Info \n" +
-          " - !help                -[command-name]                        - List general commands or more info on one command\n" +
-          " - !rate                -[track-name], -[ninja-level]          - Rate a track \n" +
-          " - !list                -[track-name], -[ninja-level]          - list tracks and their ratings\n" +
-          " - !rider               -[rider-name], -[ninja-level]          - List all of a rider's ratings \n" +
-          " - !report              -[b/f]                                 - Report a bug or feature to the bot \n" +
-          " - !delete              -[track-name]                          - Delete a rating that you made previously\n" +
+          "Commands: ---------------[optional-arguments] ------------------ Command Info \n\n" +
+          "!help                   -[command-name]                        - List general commands or more info on one command\n" +
+          "!rate                   -[track-name], -[ninja-level]          - Rate a track \n" +
+          "!list                   -[track-name], -[ninja-level]          - list tracks and their ratings\n" +
+          "!rider                  -[rider-name], -[ninja-level]          - List all of a rider's ratings \n" +
+          "!report                 -[b/f]                                 - Report a bug or feature to the bot \n" +
+          "!delete                 -[track-name]                          - Delete a rating that you made previously\n" +
           "\n[Make sure to prefix all command arguments with a hyphen '-'. E.g. !rate -luscious -8.7]" +
           "```"
       );
@@ -59,8 +59,10 @@ const rateCommandInfo =
   "------------------------\n" +
   "[Description]\n" +
   "   !rate submits a ninja-level rating for a track.\n" +
-  "   This command will prompt you for a track name and ninja-level opinion if not provided.\n" +
   "   The rating is added among a list of all ratings.\n" +
+  "   This command will prompt you for a track name and ninja-level opinion if not provided.\n" +
+  "[Usage]\n" +
+  "   !rate [track-name] [ninja-level] - Adds a rating for the track given with the ninja-level given.\n" +
   "[Arguments]\n" +
   "   * track-name - The name of track you want to rate with a ninja-level. Will be prompted for if not entered to begin with.\n" +
   "   * ninja-level - The ninja-level rating for the track given. Ninja-levels span ratings of 1.0 - 9.0.\n" +
@@ -96,14 +98,19 @@ const riderCommandInfo =
   "Rider Command Information\n" +
   "------------------------\n" +
   "[Description]\n" +
-  "   !rider displays all the tracks rated by a specific rider along with the ratings they gave the tracks. For comparison, average/median/mode ninja level, number of ratings, highest rating and lowest rating are listed. \n" +
+  "   !rider displays all the tracks rated by a specific rider along with the ratings they gave the tracks. For comparison, average/median/mode ninja level,\n" +
+  "       number of ratings, highest rating and lowest rating are listed. \n" +
   "   This command will prompt you for a rider's name if not provided.\n" +
   "[Usage]\n" +
-  "   !rider [rider-name] - Lists all the tracks in the database rated by the rider-name given.\n" +
-  "   !rider [rider-name] [ninja-level] - Lists all the tracks in the database rated by the rider-name given filtered by ninja-level.\n" +
+  "   !rider [rider-name] - Lists all the ratings in the database added by the rider-name given.\n" +
+  "   !rider [rider-name] [ninja-level] - Lists all the rating in the database added by the rider given, filtered by ninja-level.\n" +
+  "                                       (E.g. !rider -rjburgerr1 -7 will list tracks rated between 7.0 - 7.99 by 'rjburgerr1').\n" +
+  "                                       (E.g. !rider -rjburgerr1 -7.2 will list tracks rated 7.2 by 'rjburgerr1')\n" +
+  "   !rider [rider-name] [track-name] - Lists the rating in the database added by the rider given, for the track given.\n" +
   "[Arguments]\n" +
   "   * rider-name - The name of rider you want to list tracks from.\n" +
   "   * ninja-level - filters all the ratings for the rider given by the ninja-level given.\n" +
+  "   * track-name - The track to search for from the rider given.\n" +
   "```";
 
 const reportCommandInfo =
