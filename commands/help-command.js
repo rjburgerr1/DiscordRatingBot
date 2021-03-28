@@ -6,12 +6,14 @@ module.exports = {
       message.author.send(
         "```ini\n" +
           "commands: --------------[optional-arguments] ------------------ Command Info \n" +
-          " - !help                [command-name]                        - List general commands or more info on one command\n" +
-          " - !rate                [track-name], [ninja-level]           - Rate a track \n" +
-          " - !list                [track-name], [ninja-level]           - list tracks and their ratings\n" +
-          " - !rider               [rider-name], [ninja-level]           - List all of a rider's ratings \n" +
-          " - !report              [b/f]                                 - Report a bug or feature to the bot \n" +
-          " - !delete              [track-name]                          - Delete a rating that you made previously```"
+          " - !help                -[command-name]                        - List general commands or more info on one command\n" +
+          " - !rate                -[track-name], -[ninja-level]          - Rate a track \n" +
+          " - !list                -[track-name], -[ninja-level]          - list tracks and their ratings\n" +
+          " - !rider               -[rider-name], -[ninja-level]          - List all of a rider's ratings \n" +
+          " - !report              -[b/f]                                 - Report a bug or feature to the bot \n" +
+          " - !delete              -[track-name]                          - Delete a rating that you made previously\n" +
+          "\n[Make sure to prefix all command arguments with a hyphen '-'. E.g. !rate -luscious -8.7]" +
+          "```"
       );
     } else {
       // args[0] should be command name for extra information
@@ -76,10 +78,11 @@ const listCommandInfo =
   "   This command will prompt you for a track name and ninja-level opinion if not provided.\n" +
   "   The rating is added among a list of all ratings.\n" +
   "[Usage]\n" +
-  "   !list - Lists all the tracks in the database\n" +
-  "   !list [track-name] - Lists the track-name and average ninja-level, with the number of ratings given for the track.\n" +
-  "   !list [ninja-level] - Lists all the tracks and their average ninja-level, with the number of ratings given for each track.\n" +
+  "   !list - Lists all the tracks in the database, along with the average ninja-level, median ninja-level, mode ninja-level, lowest rating, highest rating, and number of ratings for each track\n" +
+  "   !list [track-name] - Lists the track-name, average ninja-level, median ninja-level, mode ninja-level, lowest rating, highest rating, and number of ratings given for the track.\n" +
+  "   !list [ninja-level] - Lists all the tracks and their average ninja-level, median ninja-level, mode ninja-level, lowest rating, highest rating with the number of ratings given for each track.\n" +
   "                         Filtered by tracks with an average rating of the ninja level you submit. (E.g. !list -7 will list tracks rated from 7-7.99).\n" +
+  "                                                                                                  (E.g. !list -7.2 will list tracks rated 7.2)\n" +
   "[Arguments]\n" +
   "   * track-name - The name of track you want to rate with a ninja-level. Will be prompted for if not entered to begin with.\n" +
   "   * ninja-level - The ninja-level rating for the track given. Ninja-levels span ratings of 1.0 - 9.0.\n" +
@@ -93,7 +96,7 @@ const riderCommandInfo =
   "Rider Command Information\n" +
   "------------------------\n" +
   "[Description]\n" +
-  "   !rider displays all the tracks rated by a specific rider along with the ratings they gave the tracks.\n" +
+  "   !rider displays all the tracks rated by a specific rider along with the ratings they gave the tracks. For comparison, average/median/mode ninja level, number of ratings, highest rating and lowest rating are listed. \n" +
   "   This command will prompt you for a rider's name if not provided.\n" +
   "[Usage]\n" +
   "   !rider [rider-name] - Lists all the tracks in the database rated by the rider-name given.\n" +
