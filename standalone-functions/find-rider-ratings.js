@@ -1,4 +1,5 @@
 const { tracksDB } = require("../data/mongodb-utility");
+const { setDecOrInt } = require("../standalone-functions/set-level-filter");
 const getRider = async (rider, levelFilter, trackName) => {
   try {
     // Will get all ratings for a rider if no other arguments specified
@@ -6,9 +7,10 @@ const getRider = async (rider, levelFilter, trackName) => {
 
     // If level filter argument is included, set range of levels
     if (levelFilter !== undefined) {
+      let [lowerBoundLevel, higherBoundLevel] = setDecOrInt(levelFilter);
       queryFilters["level_opinion"] = {
-        $gte: Number(levelFilter),
-        $lt: Number(levelFilter) + 1,
+        $gte: Number(lowerBoundLevel),
+        $lte: Number(higherBoundLevel),
       };
     }
 
@@ -17,14 +19,20 @@ const getRider = async (rider, levelFilter, trackName) => {
       queryFilters["track"] = trackName;
     }
 
-    return await tracksDB
+    const riderRatings = await tracksDB
       .collection("ratings")
       .find(queryFilters)
       .collation({ locale: "en", strength: 1 })
       .sort({ level_opinion: -1 })
       .toArray();
+
+    if (riderRatings.length === 0)
+      throw new Error("Could not find ratings from '" + rider + "'.");
+
+    return riderRatings;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
