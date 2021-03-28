@@ -1,7 +1,6 @@
 const { setDecOrInt } = require("../standalone-functions/set-level-filter");
 const getMedian = async (database, collection, levelFilter) => {
   const queryFilters = setQueryFilters(levelFilter);
-  console.log(queryFilters);
   const median = await database
     .collection(collection)
     .aggregate(queryFilters)
