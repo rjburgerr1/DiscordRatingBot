@@ -66,3 +66,5 @@ start().then(() => {
 
   client.login(config.discordToken);
 });
+
+exports.client = client;
