@@ -20,26 +20,23 @@ module.exports = {
   async execute(message, args) {
     try {
       let track = await getTrackArgument(message, args);
-      let allRatings = false;
-      if (track === "all") {
-        allRatings = true;
-        track = undefined; // Undefined to clear track filter, to search for all track ratings by rider
-      }
-      const ratingToDelete = await getRider(
+
+      const allRatings = track.toLowerCase() !== "all" ? false : true;
+
+      track = track.toLowerCase() !== "all" ? track : undefined;
+      let ratingsToDelete = await getRider(
         message.author.username,
         undefined,
         track
       );
-      if (ratingToDelete.length === 0) {
-        message.author.send("```fix\nNo ratings to delete\n```");
-        return;
-      }
 
       // Paginate and format track ratings for rider
-      await getConfirmation(message, ratingToDelete);
+      await getConfirmation(message, ratingsToDelete);
+      console.log("Confirmed Deletion ");
 
-      await deleteDocument(message.author, track, allRatings);
+      await deleteDocument(message.author, ratingsToDelete, allRatings);
     } catch (error) {
+      message.author.send("```fix\n" + "Could not delete rating(s)." + "\n```");
       console.log(error);
     }
   },
@@ -107,8 +104,7 @@ const getConfirmation = async (message, ratingsToDelete) => {
         break;
       }
     } catch (error) {
-      console.log(error);
-      break;
+      throw new Error(error);
     }
   }
 };
