@@ -21,6 +21,16 @@ const getMode = async (database, collection) => {
         },
       },
       {
+        $sort: {
+          level_opinion: -1,
+        },
+      },
+      {
+        $sort: {
+          levelCount: -1,
+        },
+      },
+      {
         $group: {
           _id: "$_id.track",
           levels: {
@@ -46,7 +56,6 @@ const getMode = async (database, collection) => {
       },
     ])
     .toArray();
-
   return mode;
 };
 module.exports.getMode = getMode;
