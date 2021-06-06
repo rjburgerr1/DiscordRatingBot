@@ -18,7 +18,7 @@ module.exports = {
       const trackRatings = await getEachRating(tracksDB, "ratings", trackName);
       pages = toString(trackRatings, trackName);
 
-      sendPageMessage(message, pages, 1);
+      sendPageMessage(message.author, pages, 1);
       while (true) {
         try {
           let changePageNumber = await collectBasic(
@@ -28,7 +28,7 @@ module.exports = {
             20000,
             filterCollector
           );
-          sendPageMessage(message, pages, changePageNumber);
+          sendPageMessage(message.author, pages, changePageNumber);
         } catch (error) {
           console.log(error);
           break;

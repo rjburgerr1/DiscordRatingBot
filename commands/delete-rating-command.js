@@ -87,7 +87,7 @@ const getConfirmation = async (message, ratingsToDelete) => {
   });
 
   pages = paginate(confMsg, /(.|\n){1,1000}\n/g, confMsgHeader);
-  sendPageMessage(message, pages, 1);
+  sendPageMessage(message.author, pages, 1);
   while (true) {
     try {
       let changePageNumber = await collectBasic(
@@ -99,7 +99,7 @@ const getConfirmation = async (message, ratingsToDelete) => {
         "```Did not receive confirmation, try !delete again.```"
       );
       if (changePageNumber.toLowerCase() !== "y") {
-        sendPageMessage(message, pages, changePageNumber);
+        sendPageMessage(message.author, pages, changePageNumber);
       } else {
         break;
       }
