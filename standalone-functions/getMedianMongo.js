@@ -1,15 +1,5 @@
 const { setDecOrInt } = require("../standalone-functions/set-level-filter");
-const getMedian = async (database, collection, levelFilter) => {
-  const queryFilters = setQueryFilters(levelFilter);
-  const median = await database
-    .collection(collection)
-    .aggregate(queryFilters)
-    .toArray();
-  return median;
-};
-
-const setQueryFilters = (levelFilter) => {
-  // default median pipeline
+const getMedian = async (database, collection, trackName, levelFilter) => {
   let queryFilters = [
     {
       $group: {
@@ -83,7 +73,16 @@ const setQueryFilters = (levelFilter) => {
     },
   ];
 
-  if (levelFilter !== undefined) {
+  queryFilters = await buildQueryFilters(queryFilters, trackName, levelFilter);
+  const median = await database
+    .collection(collection)
+    .aggregate(queryFilters)
+    .toArray();
+  return median;
+};
+
+const buildQueryFilters = async (queryFilters, trackName, levelFilter) => {
+  if (trackName === undefined && levelFilter !== undefined) {
     let [lowerBoundLevel, higherBoundLevel] = setDecOrInt(levelFilter);
     queryFilters.push({
       $match: {
@@ -93,7 +92,25 @@ const setQueryFilters = (levelFilter) => {
         },
       },
     });
+  } else if (trackName !== undefined && levelFilter === undefined) {
+    queryFilters.splice(0, 0, {
+      $match: {
+        track: trackName,
+      },
+    });
+  } else if (trackName !== undefined && levelFilter !== undefined) {
+    let [lowerBoundLevel, higherBoundLevel] = setDecOrInt(levelFilter);
+    queryFilters.push({
+      $match: {
+        track: trackName,
+        level_median: {
+          $gte: Number(lowerBoundLevel),
+          $lte: Number(higherBoundLevel),
+        },
+      },
+    });
   }
+
   return queryFilters;
 };
 

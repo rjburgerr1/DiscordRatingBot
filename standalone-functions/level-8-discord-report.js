@@ -2,7 +2,6 @@ const { getMedian } = require("../standalone-functions/getMedianMongo");
 const { getAllRatings } = require("../standalone-functions/getallRatingsMongo");
 const { getAverage } = require("../standalone-functions/getAverageMongo");
 const { getMode } = require("../standalone-functions/getModeMongo");
-const { findRatings } = require("../standalone-functions/find-ratings");
 const level8ChannelID = "814172418922774589";
 const cron = require("cron");
 const { tracksDB } = require("../data/mongodb-utility");
@@ -61,7 +60,7 @@ const findPotentialLevel8s = async (trackName, levelFilter) => {
 
   let mergedArray = mergeArrays(medianRatings, allRatings);
   mergedArray = mergeArrays(modeRatings, mergedArray);
-  console.log(mergedArray);
+
   return mergedArray;
   // Returns an array of track objects
 };

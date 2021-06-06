@@ -14,6 +14,7 @@ const {
   paginate,
   sendPageMessage,
 } = require("../standalone-functions/paginate");
+const { findRatings } = require("../standalone-functions/find-ratings");
 
 module.exports = {
   name: "level8",
@@ -35,7 +36,7 @@ const reportLevel8s = async (client, message) => {
   const trackList = await findPotentialLevel8s();
   pages = toString(trackList);
 
-  let scheduledMessage = new cron.CronJob("* * 0 * * *", () => {
+  let scheduledMessage = new cron.CronJob("*/10 * * * * *", () => {
     //Runs every hour
 
     for (i = 0; i < pages.length; i++) {
@@ -49,23 +50,28 @@ const reportLevel8s = async (client, message) => {
 };
 
 const findPotentialLevel8s = async () => {
-  averageRatings = await getAverage(tracksDB, "ratings", undefined, "8");
-  medianRatings = await getMedian(tracksDB, "ratings");
-  modeRatings = await getMode(tracksDB, "ratings");
+  averageRatings8 = await getAverage(tracksDB, "ratings", undefined, "8");
+
+  medianRatings8 = await getMedian(tracksDB, "ratings", undefined, "8");
+
+  modeRatings8 = await getMode(tracksDB, "ratings", undefined, "8");
+
   allRatings = await getAllRatings(tracksDB, "ratings");
 
-  mergedArray = leftJoin(
-    leftJoin(
-      leftJoin(averageRatings, allRatings, "track", "track"),
-      modeRatings,
-      "track",
-      "track"
-    ),
-    medianRatings,
-    "track",
-    "track"
+  const level8tracks = arrayUnique(
+    averageRatings8.concat(medianRatings8).concat(modeRatings8)
   );
-  return mergedArray;
+
+  const onlyTrackNamesLevel8 = [
+    ...new Set(level8tracks.map((item) => item.track)),
+  ];
+
+  var potentialLevel8Tracks = [];
+  for (let i = 0; i < onlyTrackNamesLevel8.length; i++) {
+    rating = await findRatings(onlyTrackNamesLevel8[i]);
+    potentialLevel8Tracks = potentialLevel8Tracks.concat(rating);
+  }
+  return potentialLevel8Tracks;
 };
 
 const leftJoin = (objArr1, objArr2, key1, key2) =>
@@ -110,3 +116,14 @@ const toString = (trackList) => {
   });
   return paginate(result, /(.|\n){1,1800}\n/g, pageHeader);
 };
+
+function arrayUnique(array) {
+  var a = array.concat();
+  for (var i = 0; i < a.length; ++i) {
+    for (var j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) a.splice(j--, 1);
+    }
+  }
+
+  return a;
+}
