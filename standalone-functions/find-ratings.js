@@ -5,8 +5,8 @@ const { getAllRatings } = require("../standalone-functions/getallRatingsMongo");
 const { getAverage } = require("../standalone-functions/getAverageMongo");
 const { getMode } = require("../standalone-functions/getModeMongo");
 const findRatings = async (trackName, levelFilter) => {
-  medianRatings = await getMedian(tracksDB, "ratings");
-  modeRatings = await getMode(tracksDB, "ratings");
+  medianRatings = await getMedian(tracksDB, "ratings", trackName, levelFilter);
+  modeRatings = await getMode(tracksDB, "ratings", trackName, levelFilter);
   averageRatings = await getAverage(
     tracksDB,
     "ratings",
@@ -15,14 +15,16 @@ const findRatings = async (trackName, levelFilter) => {
   );
 
   allRatings = await getAllRatings(tracksDB, "ratings", trackName);
-  let mergedArray = leftJoin(allRatings, medianRatings, "track", "track");
+
+  let mergedArray = await leftJoin(allRatings, medianRatings, "track", "track");
+
   if (levelFilter !== undefined) {
     // If level filter is present, the average level for track ratings takes precedence for the final list of track
-    mergedArray = leftJoin(averageRatings, mergedArray, "track", "track");
+    mergedArray = await leftJoin(averageRatings, mergedArray, "track", "track");
   } else {
-    mergedArray = leftJoin(mergedArray, averageRatings, "track", "track");
+    mergedArray = await leftJoin(mergedArray, averageRatings, "track", "track");
   }
-  mergedArray = leftJoin(mergedArray, modeRatings, "track", "track");
+  mergedArray = await leftJoin(mergedArray, modeRatings, "track", "track");
 
   return mergedArray;
   // Returns an array of track objects
