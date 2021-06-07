@@ -2,18 +2,16 @@ const { getMedian } = require("../standalone-functions/getMedianMongo");
 const { getAllRatings } = require("../standalone-functions/getallRatingsMongo");
 const { getAverage } = require("../standalone-functions/getAverageMongo");
 const { getMode } = require("../standalone-functions/getModeMongo");
-const level8ChannelID = "814188794911653921";
+const level8ChannelID = "814172418922774589";
 const cron = require("cron");
 const { tracksDB } = require("../data/mongodb-utility");
 const { findRatings } = require("../standalone-functions/find-ratings");
 const { capitalize } = require("../standalone-functions/capitalize");
-
 const {
   paginate,
   sendPageMessage,
   editPageMessage,
 } = require("../standalone-functions/paginate");
-
 const {
   formatStringSpace,
 } = require("../standalone-functions/format-string-space");
@@ -51,7 +49,7 @@ const reportLevel8s = async (client) => {
     curPage = await editPageMessage(curPage, pages, pageNumber);
   });
 
-  let scheduledMessage = new cron.CronJob("*/10 * * * * *", () => {});
+  let scheduledMessage = new cron.CronJob("* * 0 * * *", () => {});
   //Runs every hour
 
   // When you want to start it, use:
