@@ -1,5 +1,5 @@
 const { getMedian } = require("../standalone-functions/getMedianMongo");
-const { getAllRatings } = require("../standalone-functions/getallRatingsMongo");
+const { getAllRatings } = require("../standalone-functions/getAllRatingsMongo");
 const { getAverage } = require("../standalone-functions/getAverageMongo");
 const { getMode } = require("../standalone-functions/getModeMongo");
 const level8ChannelID = "814172418922774589";
