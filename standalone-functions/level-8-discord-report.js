@@ -19,43 +19,46 @@ const {
 const reportLevel8s = async (client) => {
   // Fetch a channel by its id
   channel = await client.channels.cache.get(level8ChannelID);
-
-  // Get list of tracks to send to discord channel
-  const trackList = await findPotentialLevel8s();
-  pages = toString(trackList);
   // Start on page 1
   let pageNumber = 1;
-  emojiList = ["⏪", "⏩"]; // Arrows for turning pages :)
-  var curPage = await sendPageMessage(channel, pages, pageNumber);
+  let message = await channel.send("TEMPLATE"); // Start with template message
+  // Arrows for turning pages :)
+  emojiList = ["⏪", "⏩"];
 
-  for (const emoji of emojiList) await curPage.react(emoji);
+  // Send first message with track list
+  //var curPage = await sendPageMessage(channel, pages, pageNumber);
 
-  const reactionCollector = curPage.createReactionCollector(
-    (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot
-  );
+  // Cron job to run every hour.
+  let scheduledMessage = new cron.CronJob("*/5 * * * * *", async () => {
+    // Get list of tracks to send to discord channel
+    const trackList = await findPotentialLevel8s();
+    pages = toString(trackList);
 
-  reactionCollector.on("collect", async (reaction, user) => {
-    reaction.users.remove(user);
-    switch (reaction.emoji.name) {
-      case emojiList[0]:
-        pageNumber = pageNumber > 1 ? --pageNumber : pages.length;
-        break;
-      case emojiList[1]:
-        pageNumber = pageNumber + 1 <= pages.length ? ++pageNumber : 1;
-        break;
-      default:
-        break;
-    }
-    curPage = await editPageMessage(curPage, pages, pageNumber);
+    message = await editPageMessage(message, pages, pageNumber);
+
+    for (const emoji of emojiList) await message.react(emoji);
+
+    const reactionCollector = message.createReactionCollector(
+      (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot
+    );
+
+    reactionCollector.on("collect", async (reaction, user) => {
+      reaction.users.remove(user);
+      switch (reaction.emoji.name) {
+        case emojiList[0]:
+          pageNumber = pageNumber > 1 ? --pageNumber : pages.length;
+          break;
+        case emojiList[1]:
+          pageNumber = pageNumber + 1 <= pages.length ? ++pageNumber : 1;
+          break;
+        default:
+          break;
+      }
+    });
   });
-
-  let scheduledMessage = new cron.CronJob("* * 0 * * *", () => {});
-  //Runs every hour
 
   // When you want to start it, use:
   scheduledMessage.start();
-
-  // You could also make a command to pause and resume the job
 };
 
 const findPotentialLevel8s = async () => {

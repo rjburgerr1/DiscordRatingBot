@@ -6,7 +6,7 @@ module.exports = {
   description: "Report to level 8 discord",
   async execute(message, args, client) {
     try {
-      await reportLevel8s(client, message);
+      await reportLevel8s(client);
     } catch (error) {
       console.log(error);
     }
