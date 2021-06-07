@@ -13,16 +13,17 @@ module.exports = {
       const track = await getTrackArgument(message, args, "rate");
       const rating = await getRatingArgument(message, args);
 
-      await getConfirmation(message, track, rating);
-
-      createRatingDocument(
-        {
-          author: message.author.username,
-          track: track.toLowerCase(),
-          level_opinion: Number(rating),
-        },
-        message
-      );
+      if (await getConfirmation(message, track, rating)) {
+        // If confirmation is received, add the document with the rating
+        createRatingDocument(
+          {
+            author: message.author.username,
+            track: track.toLowerCase(),
+            level_opinion: Number(rating),
+          },
+          message
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -48,7 +49,7 @@ const getConfirmation = async (message, track, rating) => {
       "\n```"
   );
 
-  await collectBasic(
+  const msg = await collectBasic(
     message.author,
     message,
     "```Are you sure you want to add this rating? (y)```",
@@ -56,6 +57,12 @@ const getConfirmation = async (message, track, rating) => {
     warningConfirmationFilter,
     "```Did not receive confirmation, try !rate again.```"
   );
+
+  if (warningConfirmationFilter(msg)) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 async function createRatingDocument(ratingInfo, message) {
