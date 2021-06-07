@@ -4,13 +4,14 @@ const paginate = (response, regex, pageHeader) => {
   return pages;
 };
 
-const sendPageMessage = (channel, pages, pageNumber) => {
+const sendPageMessage = async (channel, pages, pageNumber) => {
+  let message;
   if (pageNumber > pages.length) {
-    channel.send(
+    message = await channel.send(
       "```diff\n- Page number Doesn't exist! Retry a new page number, or another command. -\n```"
     );
   } else {
-    channel.send(
+    message = await channel.send(
       pages[pageNumber - 1] +
         "----------\nPages " +
         pageNumber +
@@ -19,7 +20,23 @@ const sendPageMessage = (channel, pages, pageNumber) => {
         "\n```"
     );
   }
+  return message;
+};
+
+const editPageMessage = async (message, pages, pageNumber) => {
+  message = await message.edit(
+    pages[pageNumber - 1] +
+      "----------\nPages " +
+      pageNumber +
+      "/" +
+      pages.length +
+      "\n```"
+  );
+
+  return message;
 };
 
 exports.paginate = paginate;
 exports.sendPageMessage = sendPageMessage;
+
+exports.editPageMessage = editPageMessage;
