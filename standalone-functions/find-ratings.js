@@ -1,7 +1,7 @@
 const { tracksDB } = require("../data/mongodb-utility.js");
 const { getMedian } = require("../standalone-functions/getMedianMongo");
 
-const { getAllRatings } = require("../standalone-functions/getallRatingsMongo");
+const { getAllRatings } = require("../standalone-functions/getAllRatingsMongo");
 const { getAverage } = require("../standalone-functions/getAverageMongo");
 const { getMode } = require("../standalone-functions/getModeMongo");
 const findRatings = async (trackName, levelFilter) => {
