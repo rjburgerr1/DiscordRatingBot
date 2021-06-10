@@ -101,8 +101,8 @@ const getConfirmation = async (message, ratingsToDelete) => {
       let changePageNumber = await collectBasic(
         message.author,
         message,
-        "```Are you sure you want to delete this rating? (y) \n\n - Type page numbers to display other results```",
-        20000,
+        "```Are you sure you want to delete the rating(s)? (y) \n\n - Type page numbers to display more tracks to delete (For 'all' option)```",
+        10000,
         filterCollector,
         "```Did not receive confirmation, try !delete again.```"
       );

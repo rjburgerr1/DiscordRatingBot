@@ -15,7 +15,7 @@ module.exports = {
     try {
       const [trackName, levelFilter] = filterArgs(args);
       const riderName = await getRiderArgument(message, args);
-      var pages = getRiderRatings(riderName, levelFilter, trackName);
+      var pages = await getRiderRatings(riderName, levelFilter, trackName);
 
       sendPageMessage(message.author, pages, 1);
       while (true) {

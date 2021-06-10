@@ -20,7 +20,7 @@ const collectBasic = async (
     if (response !== undefined) {
       message.author.send(response);
     }
-    //throw new Error("No messages collected");
+    throw new Error("No messages collected");
   }
 };
 
