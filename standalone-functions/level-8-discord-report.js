@@ -2,59 +2,25 @@ const { getMedian } = require("../standalone-functions/getMedianMongo");
 const { getAllRatings } = require("../standalone-functions/getAllRatingsMongo");
 const { getAverage } = require("../standalone-functions/getAverageMongo");
 const { getMode } = require("../standalone-functions/getModeMongo");
-const level8ChannelID = "814172418922774589";
 const cron = require("cron");
 const { tracksDB } = require("../data/mongodb-utility");
 const { findRatings } = require("../standalone-functions/find-ratings");
 const { capitalize } = require("../standalone-functions/capitalize");
 const {
   paginate,
-  sendPageMessage,
   editPageMessage,
 } = require("../standalone-functions/paginate");
 const {
   formatStringSpace,
 } = require("../standalone-functions/format-string-space");
 
-const reportLevel8s = async (client) => {
-  // Fetch a channel by its id
-  channel = await client.channels.cache.get(level8ChannelID);
-  // Start on page 1
-  let pageNumber = 1;
-  let message = await channel.send("TEMPLATE"); // Start with template message
-  // Arrows for turning pages :)
-  emojiList = ["⏪", "⏩"];
-
-  // Send first message with track list
-  //var curPage = await sendPageMessage(channel, pages, pageNumber);
-
+const reportLevel8s = async (channel) => {
+  // Send Placeholder message to be replaced with list of tracks when received later
+  let message = await channel.send("PLACEHOLDER"); // Start with template message
+  buildLevel8s(message);
   // Cron job to run every hour.
-  let scheduledMessage = new cron.CronJob("*/5 * * * * *", async () => {
-    // Get list of tracks to send to discord channel
-    const trackList = await findPotentialLevel8s();
-    pages = toString(trackList);
-
-    message = await editPageMessage(message, pages, pageNumber);
-
-    for (const emoji of emojiList) await message.react(emoji);
-
-    const reactionCollector = message.createReactionCollector(
-      (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot
-    );
-
-    reactionCollector.on("collect", async (reaction, user) => {
-      reaction.users.remove(user);
-      switch (reaction.emoji.name) {
-        case emojiList[0]:
-          pageNumber = pageNumber > 1 ? --pageNumber : pages.length;
-          break;
-        case emojiList[1]:
-          pageNumber = pageNumber + 1 <= pages.length ? ++pageNumber : 1;
-          break;
-        default:
-          break;
-      }
-    });
+  let scheduledMessage = new cron.CronJob("0 * * * * *", async () => {
+    buildLevel8s(message);
   });
 
   // When you want to start it, use:
@@ -130,5 +96,38 @@ function arrayUnique(array) {
 
   return a;
 }
+
+const buildLevel8s = async (message) => {
+  // Start on page 1
+  let pageNumber = 1;
+  // Arrows for turning pages :)
+  const emojiList = ["⏪", "⏩"];
+
+  // Get list of tracks to send to discord channel
+  const trackList = await findPotentialLevel8s();
+  pages = toString(trackList);
+
+  message = await editPageMessage(message, pages, pageNumber);
+
+  for (const emoji of emojiList) await message.react(emoji);
+
+  const reactionCollector = message.createReactionCollector(
+    (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot
+  );
+
+  reactionCollector.on("collect", async (reaction, user) => {
+    reaction.users.remove(user);
+    switch (reaction.emoji.name) {
+      case emojiList[0]:
+        pageNumber = pageNumber > 1 ? --pageNumber : pages.length;
+        break;
+      case emojiList[1]:
+        pageNumber = pageNumber + 1 <= pages.length ? ++pageNumber : 1;
+        break;
+      default:
+        break;
+    }
+  });
+};
 
 module.exports.reportLevel8s = reportLevel8s;
