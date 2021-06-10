@@ -20,9 +20,9 @@ module.exports = {
     // mongodb database query function call
     const trackList = await findRatings(trackName, levelFilter);
     // Paginate and format track list
-    pages = toString(trackList);
+    pages = await toString(trackList);
 
-    sendPageMessage(message.author, pages, 1);
+    await sendPageMessage(message.author, pages, 1);
     while (true) {
       try {
         let changePageNumber = await collectBasic(
@@ -98,5 +98,6 @@ const toString = (trackList) => {
       track.highestRating.author +
       "\n";
   });
-  return paginate(result, /(.|\n){1,1800}\n/g, pageHeader);
+
+  return paginate(result, /(.|\n){1,1600}\n/g, pageHeader);
 };
