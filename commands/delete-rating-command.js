@@ -4,6 +4,9 @@ const {
 const { collectBasic } = require("../standalone-functions/message-collector");
 const { getRider } = require("../standalone-functions/find-rider-ratings");
 const { capitalize } = require("../standalone-functions/capitalize");
+const { findRatings } = require("../standalone-functions/find-ratings");
+
+const { leftJoin } = require("../standalone-functions/left-join");
 
 const {
   formatStringSpace,
@@ -19,6 +22,7 @@ module.exports = {
   description: "Deletes a track rating of your own",
   async execute(message, args) {
     try {
+      await listPotentialDeletions(message.author);
       let track = await getTrackArgument(message, args);
 
       const allRatings = track.toLowerCase() !== "all" ? false : true;
@@ -35,10 +39,15 @@ module.exports = {
 
       await deleteDocument(message.author, ratingsToDelete, allRatings);
     } catch (error) {
-      message.author.send("```fix\n" + "Could not delete rating(s)." + "\n```");
+      //message.author.send("```fix\n" + "Could not delete rating(s)." + "\n```");
       //console.error(error);
     }
   },
+};
+
+const listPotentialDeletions = async (rider) => {
+  var pages = await getRiderRatings(rider);
+  sendPageMessage(rider, pages, 1);
 };
 
 const getTrackArgument = async (message, args) => {
@@ -55,7 +64,7 @@ const getTrackArgument = async (message, args) => {
       "```Type the name of the track that you want to delete.```",
       20000,
       trackArgumentFilter,
-      "```No track name received within 20 seconds. Try !delete again."
+      "```No track name received within 20 seconds. Try !delete again.```"
     );
   } else {
     // Track Name
@@ -117,4 +126,68 @@ const filterCollector = (msg) => {
     // Don't accept bot messages
     return true;
   }
+};
+
+const getRiderRatings = async (rider, levelFilter, trackName) => {
+  try {
+    const riderSpecificRatings = await getRider(
+      rider.username,
+      levelFilter,
+      trackName
+    );
+    const allRatings = await findRatings(undefined, undefined);
+    const riderRatingsMerged = leftJoin(
+      riderSpecificRatings,
+      allRatings,
+      "track",
+      "track"
+    );
+
+    return toString(riderRatingsMerged, rider.username);
+  } catch (error) {
+    //console.error(error);
+  }
+};
+
+const toString = (trackList, riderName) => {
+  let pageHeader =
+    "```ml\n" +
+    "Rider - '" +
+    riderName +
+    "'\n" +
+    "-----------------------------------------------------------------------------------------------------------------------------------------------------------\n" +
+    "Track                Level (Opinion)     Level (Average)     Level (Median)     Level (Mode)     # of Ratings      Lowest Rating             Highest Rating\n\n";
+
+  let result = "";
+
+  trackList.forEach((track) => {
+    result +=
+      capitalize(track.track) +
+      //25 because that is how many whitespace characters are between the end of "track" and the beginning of "Ninja Level". Similar idea down below for "31"
+      formatStringSpace(track.track, 21) +
+      track.level_opinion +
+      formatStringSpace(String(track.level_opinion), 20) +
+      track.level_average +
+      formatStringSpace(String(track.level_average), 20) +
+      track.level_median +
+      formatStringSpace(String(track.level_median), 20) +
+      track.level_mode +
+      formatStringSpace(String(track.level_mode), 16) +
+      track.count +
+      formatStringSpace(String(track.count), 18) +
+      track.lowestRating.author +
+      " - " +
+      track.lowestRating.minRating +
+      formatStringSpace(
+        track.lowestRating.author +
+          " - " +
+          String(track.lowestRating.minRating),
+        26
+      ) +
+      track.highestRating.maxRating +
+      " - " +
+      track.highestRating.author +
+      "\n";
+  });
+  return paginate(result, pageHeader);
 };

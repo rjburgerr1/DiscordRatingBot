@@ -17,7 +17,7 @@ const deleteDocument = async (rider, ratingsToDelete, allRatings) => {
       rider.send("```cs\nDeleted rating(s) for " + deletedTracks + "\n```");
     } else {
       rider.send(
-        "```cs\nCould not delete rating(s) for " + deletedTracks + "\n```"
+        "```cs\nCould not delete rating(s) for " + rider.username + "\n```"
       );
     }
   } catch (error) {
