@@ -2,6 +2,7 @@ const { getRider } = require("../standalone-functions/find-rider-ratings");
 const { findRatings } = require("../standalone-functions/find-ratings");
 const { collectBasic } = require("../standalone-functions/message-collector");
 const { capitalize } = require("../standalone-functions/capitalize");
+const { leftJoin } = require("../standalone-functions/left-join");
 const {
   paginate,
   sendPageMessage,
@@ -14,20 +15,7 @@ module.exports = {
     try {
       const [trackName, levelFilter] = filterArgs(args);
       const riderName = await getRiderArgument(message, args);
-      const riderSpecificRatings = await getRider(
-        riderName,
-        levelFilter,
-        trackName
-      );
-      const allRatings = await findRatings(undefined, undefined);
-      const riderRatingsMerged = leftJoin(
-        riderSpecificRatings,
-        allRatings,
-        "track",
-        "track"
-      );
-
-      pages = toString(riderRatingsMerged, riderName);
+      var pages = getRiderRatings(riderName, levelFilter, trackName);
 
       sendPageMessage(message.author, pages, 1);
       while (true) {
@@ -48,9 +36,28 @@ module.exports = {
     } catch (error) {
       message.author.send("```py\n" + error.message + "\n```");
     }
-
-    //message.author.send(toString(riderRatingsMerged, riderName) + " ```");
   },
+};
+
+const getRiderRatings = async (riderName, levelFilter, trackName) => {
+  try {
+    const riderSpecificRatings = await getRider(
+      riderName,
+      levelFilter,
+      trackName
+    );
+    const allRatings = await findRatings(undefined, undefined);
+    const riderRatingsMerged = leftJoin(
+      riderSpecificRatings,
+      allRatings,
+      "track",
+      "track"
+    );
+
+    return toString(riderRatingsMerged, riderName);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const toString = (trackList, riderName) => {
@@ -128,12 +135,6 @@ const formatStringSpace = (string, whitespace) => {
   }
   return result;
 };
-
-const leftJoin = (objArr1, objArr2, key1, key2) =>
-  objArr1.map((anObj1) => ({
-    ...objArr2.find((anObj2) => anObj1[key1] === anObj2[key2]),
-    ...anObj1,
-  }));
 
 const filterArgs = (args) => {
   let trackName, levelFilter;
