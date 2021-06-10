@@ -32,12 +32,11 @@ module.exports = {
 
       // Paginate and format track ratings for rider
       await getConfirmation(message, ratingsToDelete);
-      console.log("Confirmed Deletion ");
 
       await deleteDocument(message.author, ratingsToDelete, allRatings);
     } catch (error) {
       message.author.send("```fix\n" + "Could not delete rating(s)." + "\n```");
-      console.log(error);
+      //console.error(error);
     }
   },
 };

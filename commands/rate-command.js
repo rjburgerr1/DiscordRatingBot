@@ -24,7 +24,7 @@ module.exports = {
         message
       );
     } catch (error) {
-      console.log(error);
+      //console.error(error);
     }
   },
 };
@@ -65,7 +65,7 @@ async function createRatingDocument(ratingInfo, message) {
     return rating;
   } catch (error) {
     message.author.send("Could not add rating.");
-    console.log(error);
+    //console.error(error);
   }
 }
 

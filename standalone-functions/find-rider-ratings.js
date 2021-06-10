@@ -31,7 +31,7 @@ const getRider = async (rider, levelFilter, trackName) => {
 
     return riderRatings;
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     throw error;
   }
 };

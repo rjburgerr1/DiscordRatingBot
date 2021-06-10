@@ -30,7 +30,7 @@ module.exports = {
           );
           sendPageMessage(message.author, pages, changePageNumber);
         } catch (error) {
-          console.log(error);
+          //console.error(error);
           break;
         }
       }
