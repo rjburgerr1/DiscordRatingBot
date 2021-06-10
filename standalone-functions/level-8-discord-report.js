@@ -83,7 +83,7 @@ const toString = (trackList) => {
       track.highestRating.author +
       "\n";
   });
-  return paginate(result, /(.|\n){1,1700}\n/g, pageHeader);
+  return paginate(result, pageHeader);
 };
 
 function arrayUnique(array) {

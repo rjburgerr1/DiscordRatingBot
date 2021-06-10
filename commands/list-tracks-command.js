@@ -99,5 +99,5 @@ const toString = (trackList) => {
       "\n";
   });
 
-  return paginate(result, /(.|\n){1,1600}\n/g, pageHeader);
+  return paginate(result, pageHeader);
 };
