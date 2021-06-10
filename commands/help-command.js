@@ -44,7 +44,7 @@ const helpInfo = (message, commandName) => {
       message.author.send(trackCommandInfo);
       break;
     default:
-      console.log("command does not exist");
+      message.author.send("Command does not exist");
     // code block
   }
 };

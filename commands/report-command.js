@@ -69,6 +69,6 @@ async function createReportDocument(reportDoc, reportType, message) {
     message.author.send("```Added Report!```");
     return report;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

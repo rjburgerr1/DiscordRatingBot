@@ -21,7 +21,7 @@ class Reports {
       });
     } catch (error) {
       message.author.send("```Failed to report. Try Again.```");
-      console.log(error);
+      //console.error(error);
     }
   }
 }

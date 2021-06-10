@@ -11,7 +11,7 @@ module.exports = {
       const channel = await client.channels.cache.get(level8ChannelID);
       await reportLevel8s(channel);
     } catch (error) {
-      console.log(error);
+      //console.error(error);
     }
   },
 };

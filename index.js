@@ -8,7 +8,7 @@ async function start() {
   try {
     await mongoUtil.init();
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 start().then(() => {
@@ -59,7 +59,7 @@ start().then(() => {
     try {
       command.execute(message, args, client);
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       message.reply("there was an error trying to execute that command!");
     }
   });
