@@ -86,7 +86,7 @@ const getConfirmation = async (message, ratingsToDelete) => {
       "\n";
   });
 
-  pages = paginate(confMsg, /(.|\n){1,1000}\n/g, confMsgHeader);
+  pages = paginate(confMsg, confMsgHeader);
   sendPageMessage(message.author, pages, 1);
   while (true) {
     try {

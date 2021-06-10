@@ -61,7 +61,7 @@ const toString = (ratingList, trackName) => {
       formatStringSpace(rating.level_opinion, 20) +
       "\n";
   });
-  return paginate(result, /(.|\n){1,1800}\n/g, pageHeader);
+  return paginate(result, pageHeader);
 };
 
 const getTrackArgument = async (message, args) => {

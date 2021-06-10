@@ -1,6 +1,10 @@
-const paginate = (response, regex, pageHeader) => {
+const paginate = (response, pageHeader) => {
+  // pageLength has a max of 2000, page footer is always ~70 characters
+  pageLengthTrunc = 2000 - 70 - pageHeader.length;
+  const regex = new RegExp("(.|\n){1," + pageLengthTrunc + "}\n", "g");
   let pages = response.match(regex);
   pages = pages.map((elem) => pageHeader + elem);
+
   return pages;
 };
 

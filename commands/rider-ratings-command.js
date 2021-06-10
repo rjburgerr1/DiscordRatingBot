@@ -93,7 +93,7 @@ const toString = (trackList, riderName) => {
       track.highestRating.author +
       "\n";
   });
-  return paginate(result, /(.|\n){1,1800}\n/g, pageHeader);
+  return paginate(result, pageHeader);
 };
 
 const getRiderArgument = async (message, args) => {
