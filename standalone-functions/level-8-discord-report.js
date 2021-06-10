@@ -19,7 +19,7 @@ const reportLevel8s = async (channel) => {
   let message = await channel.send("PLACEHOLDER"); // Start with template message
   buildLevel8s(message);
   // Cron job to run every hour.
-  let scheduledMessage = new cron.CronJob("0 * * * * *", async () => {
+  let scheduledMessage = new cron.CronJob("* 0 * * * *", async () => {
     buildLevel8s(message);
   });
 
@@ -127,6 +127,8 @@ const buildLevel8s = async (message) => {
       default:
         break;
     }
+
+    message = await editPageMessage(message, pages, pageNumber);
   });
 };
 
