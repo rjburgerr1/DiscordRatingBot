@@ -12,6 +12,7 @@ module.exports = {
           "!rider                  -[rider-name], -[ninja-level]          - List all of a rider's ratings \n" +
           "!report                 -[b/f]                                 - Report a bug or feature to the bot \n" +
           "!delete                 -[track-name]                          - Delete a rating that you made previously\n" +
+          "!track                  -[track-name]                          - List all ratings for track name specified\n" +
           "\n[Make sure to prefix all command arguments with a hyphen '-'. E.g. !rate -luscious -8.7]" +
           "```"
       );
@@ -39,12 +40,15 @@ const helpInfo = (message, commandName) => {
     case 4:
       message.author.send(deleteCommandInfo);
       break;
+    case 5:
+      message.author.send(trackCommandInfo);
+      break;
     default:
       console.log("command does not exist");
     // code block
   }
 };
-const commands = ["rate", "list", "rider", "report", "delete"];
+const commands = ["rate", "list", "rider", "report", "delete", "track"];
 const indexCommand = (commandName) => {
   // If people use the standard prefix in the argument for extra command info, trim the exclamation before indexing the commandName
   if (commandName.charAt(0) === "!") commandName = commandName.slice(1);
@@ -138,4 +142,17 @@ const deleteCommandInfo =
   "   !delete [track-name] - deletes the rating by you, for the track given. \n" +
   "[Arguments]\n" +
   "   * track-name - The track to search for the rating to delete.\n" +
+  "```";
+
+const trackCommandInfo =
+  "```asciidoc\n" +
+  "Track Command Information\n" +
+  "------------------------\n" +
+  "[Description]\n" +
+  "   !track lists all ratings for a specific track.\n" +
+  "   This command will prompt you for the track-name, if not provided to begin with.\n" +
+  "[Usage]\n" +
+  "   !track [track-name] - deletes the rating by you, for the track given. \n" +
+  "[Arguments]\n" +
+  "   * track-name - The track to list all ratings for.\n" +
   "```";
