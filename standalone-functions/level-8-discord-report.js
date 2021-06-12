@@ -17,10 +17,10 @@ const {
 const reportLevel8s = async (channel) => {
   // Send Placeholder message to be replaced with list of tracks when received later
   let message = await channel.send("PLACEHOLDER"); // Start with template message
-  buildLevel8s(message);
+  await buildLevel8s(message);
   // Cron job to run every hour.
   let scheduledMessage = new cron.CronJob("* 0 * * * *", async () => {
-    buildLevel8s(message);
+    await buildLevel8s(message);
   });
 
   // When you want to start it, use:
