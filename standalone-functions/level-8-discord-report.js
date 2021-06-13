@@ -17,14 +17,22 @@ const {
 const reportLevel8s = async (channel) => {
   // Send Placeholder message to be replaced with list of tracks when received later
   let message = await channel.send("PLACEHOLDER"); // Start with template message
-  await buildLevel8s(message);
-  // Cron job to run every hour.
-  let scheduledMessage = new cron.CronJob("* 0 * * * *", async () => {
-    await buildLevel8s(message);
-  });
 
-  // When you want to start it, use:
-  scheduledMessage.start();
+  // Cron job to run every hour at the 0th minute and 0th second.
+
+  new cron.CronJob(
+    "0 0 */1 * * *",
+    async function job() {
+      await buildLevel8s(message);
+    },
+    () => {
+      console.log("Finished Cron Job");
+    },
+    true,
+    undefined,
+    undefined,
+    true // Starts job after construction
+  );
 };
 
 const findPotentialLevel8s = async () => {
@@ -33,7 +41,7 @@ const findPotentialLevel8s = async () => {
   modeRatings8 = await getMode(tracksDB, "ratings", undefined, "8");
   allRatings = await getAllRatings(tracksDB, "ratings");
 
-  const level8tracks = arrayUnique(
+  const level8tracks = await arrayUnique(
     averageRatings8.concat(medianRatings8).concat(modeRatings8)
   );
 
@@ -105,13 +113,13 @@ const buildLevel8s = async (message) => {
 
   // Get list of tracks to send to discord channel
   const trackList = await findPotentialLevel8s();
-  pages = toString(trackList);
+  pages = await toString(trackList);
 
   message = await editPageMessage(message, pages, pageNumber);
 
   for (const emoji of emojiList) await message.react(emoji);
 
-  const reactionCollector = message.createReactionCollector(
+  const reactionCollector = await message.createReactionCollector(
     (reaction, user) => emojiList.includes(reaction.emoji.name) && !user.bot
   );
 
