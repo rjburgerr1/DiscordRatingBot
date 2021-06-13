@@ -4,6 +4,11 @@ const {
 const { collectBasic } = require("../standalone-functions/message-collector");
 const { capitalize } = require("../standalone-functions/capitalize");
 const { tracksDB } = require("../data/mongodb-utility.js");
+const { getAverage } = require("../standalone-functions/getAverageMongo");
+
+const { getMedian } = require("../standalone-functions/getMedianMongo");
+
+const { getMode } = require("../standalone-functions/getModeMongo");
 const {
   paginate,
   sendPageMessage,
@@ -16,8 +21,33 @@ module.exports = {
     try {
       const trackName = await getTrackArgument(message, args);
       const trackRatings = await getEachRating(tracksDB, "ratings", trackName);
-      pages = toString(trackRatings, trackName);
 
+      const averageRating = await getAverage(
+        tracksDB,
+        "ratings",
+        trackName,
+        undefined
+      );
+      const medianRating = await getMedian(
+        tracksDB,
+        "ratings",
+        trackName,
+        undefined
+      );
+      const modeRating = await getMode(
+        tracksDB,
+        "ratings",
+        trackName,
+        undefined
+      );
+
+      pages = await toString(
+        trackRatings,
+        trackName,
+        averageRating,
+        medianRating,
+        modeRating
+      );
       sendPageMessage(message.author, pages, 1);
       while (true) {
         try {
@@ -42,12 +72,24 @@ module.exports = {
   },
 };
 
-const toString = (ratingList, trackName) => {
+const toString = (
+  ratingList,
+  trackName,
+  averageRating,
+  medianRating,
+  modeRating
+) => {
   let pageHeader =
     "```ml\n" +
     "Track - '" +
     trackName +
-    "'\n" +
+    "' \t\t\t\t  Level (Average) - " +
+    averageRating[0].level_average +
+    " \t\tLevel (Median) - " +
+    medianRating[0].level_median +
+    " \t\tLevel (Mode) - " +
+    modeRating[0].level_mode +
+    "\n" +
     "------------------------------------\n" +
     "Rider                Level (Opinion)\n\n";
 
